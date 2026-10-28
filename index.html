@@ -1187,7 +1187,7 @@ body:not(.mode-paid) .app .facts{ display:block !important; }
   <!-- Kid-safety confirm gate (before any wallet code runs) -->
   <div class="sheet" id="confirmSheet"><div class="panel">
     <h2>Play SUMBOT — Paid</h2>
-    <p>One entry = one run. It costs <b>25 OIL</b>, which is spent: it is not paid back and there is no prize. You're playing for a place on the leaderboard. If your wallet holds a FinnBot, your score counts ×1.5.<br/><br/>Needs a grown-up's crypto wallet. A <b>fun ranking</b>, not an official one.</p>
+    <p>One entry = one run. It costs <b>25 OIL</b>, which is spent: it is not paid back and there is no prize. You're playing for a place on the leaderboard. Everyone is ranked on the same real score; if your wallet holds a FinnBot, you also get a Bot holders table of your own.<br/><br/>Needs a grown-up's crypto wallet. A <b>fun ranking</b>, not an official one.</p>
     <button class="again" id="confirmEnter" type="button">Connect &amp; Pay</button>
     <button class="ghostbtn" id="confirmBack" type="button">Cancel</button>
   </div></div>
@@ -2313,8 +2313,10 @@ if(!HEADLESS){
       var lines = String(text||'').trim().split(/\r?\n/);
       if(!lines.length || !lines[0]) return null;
       var head = lines[0].split(',').map(function(s){ return s.trim(); });
-      var col = head.indexOf('score_adjusted');
-      if(col < 0) col = head.indexOf('score_raw');
+      /* the REAL score first (R6, 2026-10-28): the player's own run is never multiplied, so a
+         rank beat read off a holder's x1.5 column compared two different units */
+      var col = head.indexOf('score_raw');
+      if(col < 0) col = head.indexOf('score_adjusted');
       if(col < 0) col = head.indexOf('score');
       if(col < 0) return null;                       // not a board we understand
       var out = [];
